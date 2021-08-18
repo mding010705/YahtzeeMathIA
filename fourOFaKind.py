@@ -1,5 +1,6 @@
 import math
 
+#binom distr, not accurate
 def FOK():
     probs=0;
     for y in range(0,5):
@@ -9,6 +10,8 @@ def FOK():
                     probs+= p(y, z, a);
     return probs;
 
+
+#the function naming and purpose is consistent as with the fiveOFaKind file
 def FourOfAKind():
     prob=0;
     exVal=0;
@@ -21,11 +24,14 @@ def FourOfAKind():
                 if y+z+a>4 and z>y and z<=5-y and z+a==4 and y!=0:
                     prob+= probabilityB(y, z, a);
                     exVal+=ExValB(y,z,a);
+                #with 4OK, it's possible to keep dice from the first roll throughout but on the 3rd roll, a set of 4 matching dice (that aren't the same value as the initially retained dice) to appear
                 if a+y+z<=5 and y+z+a>4 and a==4 and y+z<=5:
                     prob+= probabilityC(y,z,a);
                     exVal+=ExValC(y,z,a);
     
     return (prob, exVal/prob, exVal);
+
+
 def FourOfAKind1(n, val):
     prob=0;
     exVal=0;
@@ -52,6 +58,46 @@ def ncr(n,r):
 def npr(n,r):
     f = math.factorial
     return f(n) / f(n-r);
+
+def probabilityA (i, j, k):
+    events=[];
+    events.append((1/6)**5);
+    events.append(ncr(5,i));
+    events.append(ncr(6,1));
+    if i==1 or i==4 or i==0 or i==5:
+        events.append(npr(5,5-i));
+    if i==0:
+        events.append(6);
+    elif i==2:
+        events.append(npr(5,5-i)+ncr(5,1)*ncr(4,1))
+    elif i==3:
+        events.append(ncr(5,5-i-1)+npr(5,5-i));
+    if i<4:
+        events.append((1/6)**(5-i));
+        events.append(ncr(5-i,j));
+        if i+j==1 or i+j==4 or i+j==0 or i+j==5:
+            events.append(npr(5,5-i-j));
+        if i+j==0:
+            events.append(6);
+        elif i+j==2:
+            events.append(npr(5,5-i-j)+ncr(5,1)*ncr(4,1))
+        elif i+j==3:
+            events.append(ncr(5,5-i-j-1)+npr(5,5-i-j));
+    elif i==4:
+        events.append((1/6)**(5-i));
+        events.append(ncr(5,5-i-1)+npr(5,5-i));
+    if i+j<4:
+        events.append((1/6)**(5-i-j));
+        events.append(ncr(5-i-j,k));
+        events.append(npr(5,5-i-j-k));
+    elif i==4: 
+        events.append((1/6)**(5-i));
+        events.append(npr(5,5-i));
+    elif i+j==4:
+        events.append((1/6)**(5-i-j));
+        events.append(npr(5,5-i-j));
+    return math.prod(events);
+
 def probabilityA1 (i):
     events=[];
     events.append((1/6)**5);
@@ -100,11 +146,14 @@ def probabilityA3 (i, j, k):
         events.append(npr(5,5-i-j));
     return math.prod(events);
 
-def probabilityA (i, j, k):
+
+def probabilityB (i, j, k):
+    f=math.factorial;
     events=[];
     events.append((1/6)**5);
     events.append(ncr(5,i));
-    events.append(ncr(6,1));
+    if i!=0:
+        events.append(ncr(6,1));
     if i==1 or i==4 or i==0 or i==5:
         events.append(npr(5,5-i));
     if i==0:
@@ -113,31 +162,26 @@ def probabilityA (i, j, k):
         events.append(npr(5,5-i)+ncr(5,1)*ncr(4,1))
     elif i==3:
         events.append(ncr(5,5-i-1)+npr(5,5-i));
-    if i<4:
-        events.append((1/6)**(5-i));
-        events.append(ncr(5-i,j));
-        if i+j==1 or i+j==4 or i+j==0 or i+j==5:
-            events.append(npr(5,5-i-j));
-        if i+j==0:
-            events.append(6);
-        elif i+j==2:
-            events.append(npr(5,5-i-j)+ncr(5,1)*ncr(4,1))
-        elif i+j==3:
-            events.append(ncr(5,5-i-j-1)+npr(5,5-i-j));
-    elif i==4:
-        events.append((1/6)**(5-i));
-        events.append(ncr(5,5-i-1)+npr(5,5-i));
-    if i+j<4:
-        events.append((1/6)**(5-i-j));
-        events.append(ncr(5-i-j,k));
-        events.append(npr(5,5-i-j-k));
-    elif i==4: 
-        events.append((1/6)**(5-i));
-        events.append(npr(5,5-i));
-    elif i+j==4:
-        events.append((1/6)**(5-i-j));
-        events.append(npr(5,5-i-j));
+    events.append((1/6)**(5-i));
+    events.append(ncr(5-i,j)*5);
+    if i+j==1 or i+j==4 or i+j==0 or i+j==5:
+        events.append(npr(4,5-i-j));
+    if i+j==0:
+        events.append(5);
+    elif i+j==2:
+        events.append(npr(4,5-i-j)+ncr(3,1)*ncr(4,1))
+    elif i+j==3:
+        events.append(ncr(4,5-i-j-1)+npr(4,5-i-j));
+    if j<4:
+        events.append((1/6)**(5-j));
+        events.append(ncr(5-j,k));
+        events.append(npr(5,5-j-k));
+    elif j==4:
+        events.append((1/6)**(5-j));
+        events.append(npr(5,5-j));
+
     return math.prod(events);
+
 def probabilityB1 (i):
     events=[];
     events.append((1/6)**5);
@@ -179,13 +223,13 @@ def probabilityB3 (i, j, k):
         events.append(npr(5,5-j));
 
     return math.prod(events);
-def probabilityB (i, j, k):
-    f=math.factorial;
+
+#as seen in the FourOfAKind fucntion, there is a third branch on the way to 4 matching dice within 3 rolls      
+def probabilityC (i, j, k):
     events=[];
     events.append((1/6)**5);
     events.append(ncr(5,i));
-    if i!=0:
-        events.append(ncr(6,1));
+    events.append(ncr(6,1));
     if i==1 or i==4 or i==0 or i==5:
         events.append(npr(5,5-i));
     if i==0:
@@ -195,22 +239,18 @@ def probabilityB (i, j, k):
     elif i==3:
         events.append(ncr(5,5-i-1)+npr(5,5-i));
     events.append((1/6)**(5-i));
-    events.append(ncr(5-i,j)*5);
+    events.append(ncr(5-i,j));
     if i+j==1 or i+j==4 or i+j==0 or i+j==5:
-        events.append(npr(4,5-i-j));
+        events.append(npr(5,5-i-j));
     if i+j==0:
-        events.append(5);
+        events.append(6);
     elif i+j==2:
-        events.append(npr(4,5-i-j)+ncr(3,1)*ncr(4,1))
+        events.append(npr(5,5-i-j)+ncr(5,1)*ncr(4,1))
     elif i+j==3:
-        events.append(ncr(4,5-i-j-1)+npr(4,5-i-j));
-    if j<4:
-        events.append((1/6)**(5-j));
-        events.append(ncr(5-j,k));
-        events.append(npr(5,5-j-k));
-    elif j==4:
-        events.append((1/6)**(5-j));
-        events.append(npr(5,5-j));
+        events.append(npr(5,5-(i+j+1))*5);
+    events.append((1/6)**(5-i-j));
+    events.append(npr(5,5-i-j-k));
+    events.append(ncr(5,5-i-j-k)*5);
 
     return math.prod(events);
 
@@ -241,35 +281,6 @@ def probabilityC2 (i, j):
     return math.prod(events);
 def probabilityC3 (i, j, k):
     events=[];
-    events.append((1/6)**(5-i-j));
-    events.append(npr(5,5-i-j-k));
-    events.append(ncr(5,5-i-j-k)*5);
-
-    return math.prod(events);
-        
-def probabilityC (i, j, k):
-    events=[];
-    events.append((1/6)**5);
-    events.append(ncr(5,i));
-    events.append(ncr(6,1));
-    if i==1 or i==4 or i==0 or i==5:
-        events.append(npr(5,5-i));
-    if i==0:
-        events.append(6);
-    elif i==2:
-        events.append(npr(5,5-i)+ncr(5,1)*ncr(4,1))
-    elif i==3:
-        events.append(ncr(5,5-i-1)+npr(5,5-i));
-    events.append((1/6)**(5-i));
-    events.append(ncr(5-i,j));
-    if i+j==1 or i+j==4 or i+j==0 or i+j==5:
-        events.append(npr(5,5-i-j));
-    if i+j==0:
-        events.append(6);
-    elif i+j==2:
-        events.append(npr(5,5-i-j)+ncr(5,1)*ncr(4,1))
-    elif i+j==3:
-        events.append(npr(5,5-(i+j+1))*5);
     events.append((1/6)**(5-i-j));
     events.append(npr(5,5-i-j-k));
     events.append(ncr(5,5-i-j-k)*5);
@@ -366,6 +377,7 @@ def ExValA (x,y,z):
                 if a!=b:
                     subVals.append((((a*4)+b)*baseProb*(1/5))/6);
     return sum(subVals);
+
 def ExValA1 (x,y,z, val):
     baseProb=probabilityA2(x,y)*probabilityA3(x,y,z);
     subVals=[];
@@ -428,6 +440,22 @@ def ExValA1 (x,y,z, val):
                 subVals.append((((val*4)+b)*baseProb*(1/5)));
     return sum(subVals);
 
+def ExValB(x,y,z):
+    baseProb=probabilityB(x,y,z);
+    subVals=[];
+    if y==4:
+        for c in range (1,7):
+            for a in range (5,7):
+                if a!=c:
+                    subVals.append(((c*4+(a))*baseProb*(1/2))/6);
+
+    else:
+        for a in range (1,7):
+            for b in range (1,7):
+                if a!=b:
+                    subVals.append((((a*4)+b)*baseProb*(1/5))/6);            
+    return sum(subVals);
+
 def ExValB1(x,y,z, val):
     baseProb=probabilityB2(x,y)*probabilityB3(x,y,z);
     subVals=[];
@@ -448,20 +476,20 @@ def ExValB1(x,y,z, val):
                     subVals.append((((a*4)+b)*baseProb*(1/5)*(1/5)));            
     return sum(subVals);
 
-def ExValB(x,y,z):
-    baseProb=probabilityB(x,y,z);
+def ExValC(x,y,z):
+    baseProb=probabilityC(x,y,z);
     subVals=[];
-    if y==4:
-        for c in range (1,7):
-            for a in range (5,7):
-                if a!=c:
-                    subVals.append(((c*4+(a))*baseProb*(1/2))/6);
-
+    if x==1:
+        i=6;
+        for h in range (1,7):
+            if h!=i:
+                subVals.append((h*4+i)*baseProb*(1/5));
+        
     else:
         for a in range (1,7):
             for b in range (1,7):
                 if a!=b:
-                    subVals.append((((a*4)+b)*baseProb*(1/5))/6);            
+                    subVals.append(((a*4)+b)*baseProb*(1/6)*(1/5));            
     return sum(subVals);
 
 def ExValC1(x,y,z, val):
@@ -484,22 +512,6 @@ def ExValC1(x,y,z, val):
                     subVals.append(((a*4)+b)*baseProb*(1/5)*(1/5));            
     return sum(subVals);
 
-
-def ExValC(x,y,z):
-    baseProb=probabilityC(x,y,z);
-    subVals=[];
-    if x==1:
-        i=6;
-        for h in range (1,7):
-            if h!=i:
-                subVals.append((h*4+i)*baseProb*(1/5));
-        
-    else:
-        for a in range (1,7):
-            for b in range (1,7):
-                if a!=b:
-                    subVals.append(((a*4)+b)*baseProb*(1/6)*(1/5));            
-    return sum(subVals);
 
 
 if __name__ == '__main__':
