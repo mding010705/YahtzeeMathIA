@@ -6,6 +6,7 @@ import numpy as np
 fig = plt.figure()
 barWidth = 0.2
 
+#organizes unweighted EV's from chooseComp program for each number of matching dice and their values given a first roll
 zdata31=[]
 for i in range (0, len(cc.results3),3): 
     zdata31.append(cc.results3[i][2])
@@ -46,15 +47,18 @@ for i in range (0, len(cc.results4),4):
 ydata4=[]
 for i in range (0, len(cc.results4),4): 
     ydata4.append(cc.results4[i][1])
+    
+#x values (all 6 dice values)
 x3 = np.arange(len(zdata31))
 x4 = np.arange(len(zdata41))
 
-def autolabel(height, shift ):
+#puts exact height of bar on chart area
+def autolabel(height, shift):
     for index,data in enumerate(height):
         plt.text(x=index+shift/18 , y =data+1 , s=f"{round(data, 2)}" , fontdict=dict(fontsize=7), rotation='vertical')
 
     
-# plotting the points
+# plotting the points for 3OK
 plt.subplot(2, 1, 1)
 plt.bar(x3+0.4, zdata33, color= "green", width=barWidth, label= "3 Matching")
 autolabel(zdata33, 6)
@@ -71,6 +75,7 @@ ax.axes.xaxis.set_ticklabels([])
 plt.ylabel('Unweighted EV of 3OK')
 plt.legend()
 
+# plotting the points for 4OK
 plt.subplot(2, 1, 2)
 plt.bar(x4+0.6, zdata44, color= "orange", width=barWidth, label= "4 Matching")
 autolabel(zdata44, 10)
@@ -80,8 +85,9 @@ plt.bar(x4+0.2, zdata42, color= "blue",width=barWidth, label= "2 Matching" )
 autolabel(zdata42, 3)
 plt.bar(x4, zdata41, color= "red",width=barWidth, label= "1 Matching" )
 autolabel(zdata41, -1)
-plt.xticks([r + barWidth for r in range(len(zdata41))], ['1', '2', '3','4','5','6'])
+
 # naming the x axis
+plt.xticks([r + barWidth for r in range(len(zdata41))], ['1', '2', '3','4','5','6'])
 plt.xlabel('Value of Matching Dice')
 # naming the y axis
 plt.ylabel('Unweighted EV of 4OK')
