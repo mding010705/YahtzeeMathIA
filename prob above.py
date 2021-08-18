@@ -1,32 +1,22 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+#probability of rolling same or higher number in max. 2 rolls
 probs2=[]
-comp=[]
 for x in range (1,7):
     probs2.append(((7-x)/6)+((x-1)*(7-x)/36))
-    comp.append(((x-1)*(x-1)/36))
-print (probs2)
-print (comp)
 
+#probability of rolling same or higher number in 1 roll
 probs1=[]
-comp=[]
 for x in range (1,7):
     probs1.append(((7-x)/6))
-    comp.append((x-1)/6)
-print (probs1)
-print (comp)
 
 barWidth = 0.25
-
+#y axis values
 y2 = probs2
 y1 = probs1
-
-
-  
 # x axis values
 x2 = np.arange(len(y2))
-# corresponding y axis values
 
 
 # plotting the points 
