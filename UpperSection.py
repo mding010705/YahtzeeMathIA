@@ -3,8 +3,7 @@ import math
 
 def upperSection():
     probs=[0,0,0,0,0,0];
-
-                    
+    #iterating through possible sums of number of matching dice and and ways to make these sums over 3 rolls
     for x in range (0,6):
         for y in range(0,6):
             for z in range (0,6):
@@ -14,10 +13,11 @@ def upperSection():
 
     return probs;
     
-                
+#choose function                
 def ncr(n,r):
     f = math.factorial
     return f(n) // f(r) // f(n-r)
+
 
 def expected(value):
     exVals=[0,0,0,0,0,0]
@@ -35,6 +35,7 @@ def totalEV(value):
         EV+=distr[y]
     return EV;    
 
+#binomial distribution
 def p(i, j, k):
     events=[]
     events.append(ncr(5,i)*((1/6)**i)*((5/6)**(5-i)));
@@ -45,15 +46,16 @@ def p(i, j, k):
 
     return math.prod(events);
 
+#binomial distribution probability, given i matching dice from the first roll
 def p12(i, j, k):
     events=[]
     if j<=5:
             events.append(ncr(5-i,j)*((1/6)**j)*((5/6)**(5-i-j)));          
     if k<=5:
         events.append(ncr(5-i-j,k)*((1/6)**k)*((5/6)**(5-i-j-k)));
-    
-    
+  
     return math.prod(events);
+
 def EV():
     categoryEV=0;
     for x in range (1,7):
@@ -62,8 +64,10 @@ def EV():
         print (totalEV(x));
 
     print ('TOTAL: '+ str(categoryEV));
+    
 if __name__ == '__main__':
-    print (upperSection());    
+    print (upperSection());   
+    print(EV())
 
 
 
