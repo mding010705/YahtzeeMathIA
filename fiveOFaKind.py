@@ -1,5 +1,6 @@
 import math
 
+#binomial distribution approach, not accurate
 def Y():
     probs=0;
     for y in range(0,6):
@@ -9,21 +10,26 @@ def Y():
                     probs+= p(y, z, a);
     return probs;
 
+
 def Yahtzee():
     prob=0;
     exVal=0;
+    #going through ways for different numbers of matching dice can accumulate a full matching set of 5
     for y in range(0,6):
         for z in range (0,6):
             for a in range (0,6):
+                #for if the dice I keep from my first roll are kept throughout my next 2 rolls
                 if y+z+a==5:
                     prob+= probabilityA (y,z,a);
                     exVal+= ExValA(y,z,a);
+                #for if the dice I keep from my first roll are discarded on my next roll
                 if y+z+a>5 and z>y and z<=5-y and z+a==5:
                     prob+=probabilityB (y,z,a);
                     exVal+= ExValB(y,z,a);
                     
     return (prob,exVal);
 
+#given n matching dice of value, val, on the first roll
 def FiveOfAKind1(n, val):
     prob=0;
     exVal=0;
@@ -38,16 +44,20 @@ def FiveOfAKind1(n, val):
                 exVal+=ExValB1(y,z,c,val)
     return (prob,exVal/prob, exVal);
 
+#choose function
 def ncr(n,r):
     f = math.factorial;
     return f(n) // f(r) // f(n-r);
 
+#permutation function
 def npr(n,r):
     f = math.factorial
     return f(n) / f(n-r);
  
+#for if the dice I keep from my first roll are kept throughout my next 2 rolls
 def probabilityA (i, j, k):
     events=[];
+    #first roll
     events.append((1/6)**5);
     events.append(ncr(5,i));
     events.append(ncr(6,1));
@@ -59,6 +69,7 @@ def probabilityA (i, j, k):
         events.append(npr(5,5-i)+ncr(5,1)*ncr(4,1));
     elif i==3:
         events.append(ncr(5,5-i-1)+npr(5,5-i));
+    #second roll
     if i<5:
         events.append((1/6)**(5-i));
         events.append(ncr(5-i,j));
@@ -70,14 +81,14 @@ def probabilityA (i, j, k):
             events.append(npr(5,5-i-j)+ncr(5,1)*ncr(4,1));
         elif i+j==3:
             events.append(ncr(5,5-i-j-1)+npr(5,5-i-j));
+    #third roll
     if i+j<5:
         events.append((1/6)**(5-i-j));
         events.append(ncr(5-i-j,k));
         
-    #print (i,j,k)
-    #print (math.prod(events))
     return math.prod(events);
 
+#probabilityA separated into parts for the 3 individual rolls
 def probabilityA1 (i):
     events=[];
     events.append((1/6)**5);
@@ -108,7 +119,6 @@ def probabilityA2 (i, j):
         events.append(1);
 
     return math.prod(events);
-
 def probabilityA3 (i, j, k):
     events=[];
     
@@ -122,10 +132,11 @@ def probabilityA3 (i, j, k):
         events.append(1);
     
     return math.prod(events);
-        
+ 
+#for if the dice I keep from my first roll are discarded on my next roll    
 def probabilityB (i, j, k):
-    f=math.factorial;
     events=[];
+    #first roll
     events.append((1/6)**5);
     events.append(ncr(5,i));
     if i!=0:
@@ -138,6 +149,7 @@ def probabilityB (i, j, k):
         events.append(npr(5,5-i)+ncr(5,1)*ncr(4,1));
     elif i==3:
         events.append(ncr(5,5-(i+1))+npr(5,5-i));
+    #second roll
     events.append((1/6)**(5-i));
     events.append(ncr(5-i,j)*5);
     if i+j==1 or i+j==4 or i+j==0 or i+j==5:
@@ -148,14 +160,15 @@ def probabilityB (i, j, k):
         events.append(npr(4,5-i-j)+ncr(3,1)*ncr(4,1));
     elif i+j==3:
         events.append(ncr(4,5-(i+j+1))+npr(4,5-(i+j)));
+    #third roll
     if j<5:
         events.append((1/6)**(5-j));
         events.append(ncr(5-j,k));
-    #print (i,j,k)
-    #print (math.prod(events))
     
     return math.prod(events);
 
+
+#probabilityB separated into parts for the 3 individual rolls
 def probabilityB1 (i):
     events=[];
     events.append((1/6)**5);
@@ -171,10 +184,8 @@ def probabilityB1 (i):
     elif i==3:
         events.append(ncr(5,5-i-1)+npr(5,5-i));
     return math.prod(events);
-
 def probabilityB2 (i, j):
     events=[];
-    
     events.append((1/6)**(5-i));
     events.append(ncr(5-i,j)*5);
     if i+j==1 or i+j==4 or i+j==0 or i+j==5:
@@ -187,7 +198,6 @@ def probabilityB2 (i, j):
         events.append(ncr(4,5-i-j-1)+npr(4,5-i-j));
     
     return math.prod(events);
-
 def probabilityB3 (i, j, k):
     events=[];
     if j<5:
@@ -198,16 +208,7 @@ def probabilityB3 (i, j, k):
         events.append(1);
     return math.prod(events);
 
-
-def ncr(n,r):
-    f = math.factorial;
-    return f(n) // f(r) // f(n-r);
-
-def npr(n,r):
-    f = math.factorial
-    return f(n) / f(n-r);
-
-
+#binomial distribution
 def p(i, j, k):
     events=[];
     events.append(ncr(5,i)*((1/6)**i)*((5/6)**(5-i)));
@@ -217,24 +218,22 @@ def p(i, j, k):
         events.append(ncr(5-i-j,k)*((1/6)**k)*((5/6)**(5-i-j-k)));
 
     return math.prod(events);
-def scores(value):
-    possScores=[];
-    for x in range (1,7):
-        for y in range (1,7):
-            if x!=value & y!=value:
-                possScores.append(value*3+x+y);
-    return possScores;
-        
+
+#give n Yahtzees, the total score with the all n Yahtzees will be:        
 def scoreSeries(n):
     return (50+(n-1)*(100));
+#approx. prob of getting n Yahtzees
 def probabilitySeries(n):
     return ((Yahtzee()[0]**n));
+#summing the unweighted EV from multiplying the scoreSeries and probabilitySeries
 def ExVal():
     exVals=0;
     for n in range (1,14):
         exVals+=scoreSeries(n)*probabilitySeries(n);
     return exVals;
-        
+
+#for EV of 3OK and 4OK
+#for when kept dice are not rerolled
 def ExValA (x,y,z):
     baseProb=probabilityA(x,y,z);
     subVals=[];
@@ -261,7 +260,7 @@ def ExValA (x,y,z):
         for c in range (1,7):
             subVals.append((c*5)*baseProb*(1/6));
     return sum(subVals);
-
+#for when dice kept at first are rerolled
 def ExValB(x,y,z):
     baseProb=probabilityB(x,y,z);
     subVals=[];
@@ -269,6 +268,7 @@ def ExValB(x,y,z):
         subVals.append((c*5)*baseProb*(1/6));
     return sum(subVals);
 
+#same as ExValA, but with the number of matching dice and their value from the first roll being given
 def ExValA1 (x,y,z, val):
     baseProb=probabilityA2(x,y)*probabilityA3(x,y,z);
     subVals=[];
@@ -292,12 +292,13 @@ def ExValA1 (x,y,z, val):
     else:
         subVals.append((val*5)*baseProb);
     return sum(subVals);
-
+#same as ExValA, but with the number of matching dice and their value from the first roll being given
 def ExValB1(x,y,z, val):
     baseProb=probabilityB2(x,y)*probabilityB3(x,y,z);
     subVals=[];
     subVals.append((val*5)*baseProb);
     return sum(subVals);
+
 if __name__ == '__main__':
     print (Y());
     print (Yahtzee());
